@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>kana</title>
+    <style>
+      body {
+        text-align: center;
+      }
+      @media (min-width: 875px) {
+        body {
+          columns: 2;
+        }
+      }
+      @media (min-width: 1312px) {
+        body {
+          columns: 3;
+        }
+      }
+      p {
+        column-span: all;
+      }
+      table {
+        margin: auto;
+      }
+      .kana td:not(:empty) {
+        min-width: 2em;
+      }
+      .mora td:not(:empty) {
+        min-width: 3em;
+      }
+      .hiragana {
+        background-color: rgba(192, 255, 192, 255);
+      }
+      .hiragana.dakuten {
+        background-color: rgba(192, 224, 160, 255);
+      }
+      .hiragana.handakuten {
+        background-color: rgba(160, 224, 192, 255);
+      }
+      .hiragana.archaic {
+        background-color: rgba(160, 192, 160, 255);
+      }
+      .katakana {
+        background-color: rgba(255, 192, 192, 255);
+      }
+      .katakana.dakuten {
+        background-color: rgba(224, 192, 160, 255);
+      }
+      .katakana.handakuten {
+        background-color: rgba(224, 160, 192, 255);
+      }
+      .katakana.archaic {
+        background-color: rgba(192, 160, 176, 255);
+      }
+      .katakana.foreign {
+        background-color: rgba(192, 160, 160, 255);
+      }
+    </style>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        Array.prototype.forEach.call(document.querySelectorAll('td:not(:empty)'), function(e) {
+          e.addEventListener('click', function() {
+            var utterance = new SpeechSynthesisUtterance(e.textContent);
+            utterance.lang = 'ja';
+            speechSynthesis.speak(utterance);
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <p>
+      <span class='hiragana'>hiragana</span>, with
+      <span class='hiragana dakuten'>dakuten</span>,
+      <span class='hiragana handakuten'>handakuten</span>, or
+      <span class='hiragana archaic'>archaic</span><br>
+      <span class='katakana'>katakana</span>, with
+      <span class='katakana dakuten'>dakuten</span>,
+      <span class='katakana handakuten'>handakuten</span>,
+      <span class='katakana archaic'>archaic</span>, or
+      <span class='katakana foreign'>foreign</span>
+    </p>
+    <table class='kana'>
+      <thead>
+        <tr><td><th colspan=2>〜a<th colspan=2>〜i<th colspan=2>〜u<th colspan=2>〜e<th colspan=2>〜o
+      </thead>
+      <tbody>
+        <tr><th>␣<td class='hiragana'>あ<td class='katakana'>ア<td class='hiragana'>い<td class='katakana'>イ<td class='hiragana'>う<td class='katakana'>ウ<td class='hiragana'>え<td class='katakana'>エ<td class='hiragana'>お<td class='katakana'>オ
+        <tr><th>k<td class='hiragana'>か<td class='katakana'>カ<td class='hiragana'>き<td class='katakana'>キ<td class='hiragana'>く<td class='katakana'>ク<td class='hiragana'>け<td class='katakana'>ケ<td class='hiragana'>こ<td class='katakana'>コ
+        <tr><th>ky<td class='hiragana'>きゃ<td class='katakana'>キャ<td colspan=2><td class='hiragana'>きゅ<td class='katakana'>キュ<td colspan=2><td class='hiragana'>きょ<td class='katakana'>キョ
+        <tr><th>g<td class='hiragana dakuten'>が<td class='katakana dakuten'>ガ<td class='hiragana dakuten'>ぎ<td class='katakana dakuten'>ギ<td class='hiragana dakuten'>ぐ<td class='katakana dakuten'>グ<td class='hiragana dakuten'>げ<td class='katakana dakuten'>ゲ<td class='hiragana dakuten'>ご<td class='katakana dakuten'>ゴ
+        <tr><th>gy<td class='hiragana dakuten'>ぎゃ<td class='katakana dakuten'>ギャ<td colspan=2><td class='hiragana dakuten'>ぎゅ<td class='katakana dakuten'>ギュ<td colspan=2><td class='hiragana dakuten'>ぎょ<td class='katakana dakuten'>ギョ
+        <tr><th>s<td class='hiragana'>さ<td class='katakana'>サ<td><td class='katakana foreign'>セィ<td class='hiragana'>す<td class='katakana'>ス<td class='hiragana'>せ<td class='katakana'>セ<td class='hiragana'>そ<td class='katakana'>ソ
+        <tr><th>sh<td class='hiragana'>しゃ<td class='katakana'>シャ<td class='hiragana'>し<td class='katakana'>シ<td class='hiragana'>しゅ<td class='katakana'>シュ<td><td class='katakana foreign'>シェ<td class='hiragana'>しょ<td class='katakana'>ショ
+        <tr><th>ʑ<td class='hiragana dakuten'>ざ<td class='katakana dakuten'>ザ<td><td class='katakana dakuten foreign'>ゼィ<td class='hiragana dakuten'>ず<td class='katakana dakuten'>ズ<td class='hiragana dakuten'>ぜ<td class='katakana dakuten'>ゼ<td class='hiragana dakuten'>ぞ<td class='katakana dakuten'>ゾ
+        <tr><th>j<td class='hiragana dakuten'>じゃ<td class='katakana dakuten'>ジャ<td class='hiragana dakuten'>じ<td class='katakana dakuten'>ジ<td class='hiragana dakuten'>じゅ<td class='katakana dakuten'>ジュ<td><td class='katakana dakuten foreign'>ジェ<td class='hiragana dakuten'>じょ<td class='katakana dakuten'>ジョ
+        <tr><th>t<td class='hiragana'>た<td class='katakana'>タ<td><td class='katakana foreign'>ティ<td><td class='katakana'>テゥ<td class='hiragana'>て<td class='katakana'>テ<td class='hiragana'>と<td class='katakana'>ト
+        <tr><th>ch<td class='hiragana'>ちゃ<td class='katakana'>チャ<td class='hiragana'>ち<td class='katakana'>チ<td class='hiragana'>ちゅ<td class='katakana'>チュ<td><td class='katakana foreign'>チェ<td class='hiragana'>ちょ<td class='katakana'>チョ
+        <tr><th>ts<td colspan=4><td class='hiragana'>つ<td class='katakana'>ツ<td colspan=4>
+        <tr><th>d<td class='hiragana dakuten'>だ<td class='katakana dakuten'>ダ<td><td class='katakana dakuten foreign'>ディ<td><td class='katakana dakuten foreign'>デゥ<td class='hiragana dakuten'>で<td class='katakana dakuten'>デ<td class='hiragana dakuten'>ど<td class='katakana dakuten'>ド
+        <tr><th>dj<td class='hiragana dakuten'>ぢゃ<td class='katakana dakuten'>ヂャ<td class='hiragana dakuten'>ぢ<td class='katakana dakuten'>ヂ<td class='hiragana dakuten'>ぢゅ<td class='katakana dakuten'>ヂュ<td><td class='katakana dakuten foreign'>ヂェ<td class='hiragana dakuten'>ぢょ<td class='katakana dakuten'>ヂョ
+        <tr><th>dz<td colspan=4><td class='hiragana dakuten'>づ<td class='katakana dakuten'>ヅ<td colspan=4>
+        <tr><th>n<td class='hiragana'>な<td class='katakana'>ナ<td class='hiragana'>に<td class='katakana'>ニ<td class='hiragana'>ぬ<td class='katakana'>ヌ<td class='hiragana'>ね<td class='katakana'>ネ<td class='hiragana'>の<td class='katakana'>ノ
+        <tr><th>ny<td class='hiragana'>にゃ<td class='katakana'>ニャ<td colspan=2><td class='hiragana'>にゅ<td class='katakana'>ニュ<td colspan=2><td class='hiragana'>にょ<td class='katakana'>ニョ
+        <tr><th>h<td class='hiragana'>は<td class='katakana'>ハ<td class='hiragana'>ひ<td class='katakana'>ヒ<td><td class='katakana foreign'>ホゥ<td class='hiragana'>へ<td class='katakana'>ヘ<td class='hiragana'>ほ<td class='katakana'>ホ
+        <tr><th>f<td><td class='katakana foreign'>ファ<td><td class='katakana foreign'>フィ<td class='hiragana'>ふ<td class='katakana'>フ<td><td class='katakana foreign'>フェ<td><td class='katakana foreign'>フォ
+        <tr><th>hy<td class='hiragana'>ひゃ<td class='katakana'>ヒャ<td colspan=2><td class='hiragana'>ひゅ<td class='katakana'>ヒュ<td colspan=2><td class='hiragana'>ひょ<td class='katakana'>ヒョ
+        <tr><th>b<td class='hiragana dakuten'>ば<td class='katakana dakuten'>バ<td class='hiragana dakuten'>び<td class='katakana dakuten'>ビ<td class='hiragana dakuten'>ぶ<td class='katakana dakuten'>ブ<td class='hiragana dakuten'>べ<td class='katakana dakuten'>ベ<td class='hiragana dakuten'>ぼ<td class='katakana dakuten'>ボ
+        <tr><th>by<td class='hiragana dakuten'>びゃ<td class='katakana dakuten'>ビャ<td colspan=2><td class='hiragana dakuten'>びゅ<td class='katakana dakuten'>ビュ<td colspan=2><td class='hiragana dakuten'>びょ<td class='katakana dakuten'>ビョ
+        <tr><th>p<td class='hiragana handakuten'>ぱ<td class='katakana handakuten'>パ<td class='hiragana handakuten'>ぴ<td class='katakana handakuten'>ピ<td class='hiragana handakuten'>ぷ<td class='katakana handakuten'>プ<td class='hiragana handakuten'>ぺ<td class='katakana handakuten'>ペ<td class='hiragana handakuten'>ぽ<td class='katakana handakuten'>ポ
+        <tr><th>py<td class='hiragana handakuten'>ぴゃ<td class='katakana handakuten'>ピャ<td colspan=2><td class='hiragana handakuten'>ぴゅ<td class='katakana handakuten'>ピュ<td colspan=2><td class='hiragana handakuten'>ぴょ<td class='katakana handakuten'>ピョ
+        <tr><th>m<td class='hiragana'>ま<td class='katakana'>マ<td class='hiragana'>み<td class='katakana'>ミ<td class='hiragana'>む<td class='katakana'>ム<td class='hiragana'>め<td class='katakana'>メ<td class='hiragana'>も<td class='katakana'>モ
+        <tr><th>my<td class='hiragana'>みゃ<td class='katakana'>ミャ<td colspan=2><td class='hiragana'>みゅ<td class='katakana'>ミュ<td colspan=2><td class='hiragana'>みょ<td class='katakana'>ミョ
+        <tr><th>y<td class='hiragana'>や<td class='katakana'>ヤ<td colspan=2><td class='hiragana'>ゆ<td class='katakana'>ユ<td class='hiragana archaic'>𛀁<td class='katakana archaic'>𛀀<td class='hiragana'>よ<td class='katakana'>ヨ
+        <tr><th><sup>l</sup>/<sub>r</sub><td class='hiragana'>ら<td class='katakana'>ラ<td class='hiragana'>り<td class='katakana'>リ<td class='hiragana'>る<td class='katakana'>ル<td class='hiragana'>れ<td class='katakana'>レ<td class='hiragana'>ろ<td class='katakana'>ロ
+        <tr><th><sup>l</sup>/<sub>r</sub>y<td class='hiragana'>りゃ<td class='katakana'>リャ<td colspan=2><td class='hiragana'>りゅ<td class='katakana'>リュ<td colspan=2><td class='hiragana'>りょ<td class='katakana'>リョ
+        <tr><th rowspan=2>w<td class='hiragana' rowspan=2>わ<td class='katakana' rowspan=2>ワ<td class='hiragana archaic' rowspan=2>ゐ<td class='katakana archaic'>ヰ<td colspan=2 rowspan=2><td class='hiragana archaic' rowspan=2>ゑ<td class='katakana archaic' rowspan=2>ヱ<td class='hiragana' rowspan=2>を<td class='katakana archaic'>ヲ
+        <tr><td class='katakana foreign'>ウィ<td class='katakana foreign'>ウォ
+        <tr><th>v<td><td class='katakana foreign'>ヴァ<td><td class='katakana foreign'>ヴィ<td class='hiragana archaic'>ゔ<td class='katakana foreign'>ヴ<td><td class='katakana foreign'>ヴェ<td><td class='katakana foreign'>ヴォ
+    </table>
+    <div>◌→◌゙  ◌→◌゚ voices the consonant.</div>
+    <div>「い」「う」 and sometimes 「お」 vowels may be devoiced at the end of words or between unvoiced consonants.</div>
+    <div>As a particle, 「は」 sounds like 「わ」.</div>
+    <div>As a particle, 「を」 sounds like 「お」.</div>
+    <div>As a particle, 「へ」 sounds like 「え」.</div>
+    <table class='mora'>
+      <thead>
+        <tr><td><th colspan=2>〜ka<th colspan=2>〜〜ka<th colspan=2>〜kka<th colspan=2>〜n
+      </thead>
+      <tbody>
+        <tr><th>a<td class='hiragana'>あか<td class='katakana'>アカ<td class='hiragana'>ああか<td class='katakana'>アーカ<td class='hiragana'>あっか<td class='katakana'>アッカ<td class='hiragana'>あん<td class='katakana'>アン
+        <tr><th>i<td class='hiragana'>いか<td class='katakana'>イカ<td class='hiragana'>いいか<td class='katakana'>イーカ<td class='hiragana'>いっか<td class='katakana'>イッカ<td class='hiragana'>いん<td class='katakana'>イン
+        <tr><th>u<td class='hiragana'>うか<td class='katakana'>ウカ<td class='hiragana'>ううか<td class='katakana'>ウーカ<td class='hiragana'>うっか<td class='katakana'>ウッカ<td class='hiragana'>うん<td class='katakana'>ウン
+        <tr><th>e<td class='hiragana'>えか<td class='katakana'>エカ<td class='hiragana'>えいか<td class='katakana'>エーカ<td class='hiragana'>えっか<td class='katakana'>エッカ<td class='hiragana'>えん<td class='katakana'>エン
+        <tr><th>o<td class='hiragana'>おか<td class='katakana'>オカ<td class='hiragana'>おうか<td class='katakana'>オーカ<td class='hiragana'>おっか<td class='katakana'>オッカ<td class='hiragana'>おん<td class='katakana'>オン
+      </tbody>
+    </table>
+    <div>A vowel is lengthened by adding an 「あ」「い」「う」 or 「ー」.</div>
+    <div>A consonant is doubled by adding a small 「っ」「ッ」.</div>
+    <div>「〜ん」 may become more nasal depending on the following consonant.</div>
+  </body>
+</html>
