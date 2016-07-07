@@ -46,6 +46,9 @@
       .bopomofo tbody td:nth-child(1) {
         color: rgba(139, 0, 0, 255);
       }
+      .bopomofo .selected {
+        background-color: #fff8dc;
+      }
       .tones thead th {
         height: 3em;
         width: 3em;
@@ -65,22 +68,183 @@
       .tones thead th:nth-child(5) {
         background: url(data:image/svg+xml,<svg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2710%27%20height=%2710%27><circle%20cx=%275%27%20cy=%275%27%20r=%271%27%20fill=%27#ffc0cb%27/></svg>) no-repeat center/contain;
       }
+      .tones tbody td {
+        position: relative;
+      }
       .tones tbody div {
         display: inline-block;
         writing-mode: vertical-rl;
       }
-      .tones tbody span {
+      .tones tbody td span {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .tones tbody td:first-child span {
         visibility: hidden;
       }
     </style>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
-        Array.prototype.forEach.call(document.querySelectorAll('td[data-pinyin]'), function(td) {
-          td.addEventListener('click', function(e) {
-            var utterance = new SpeechSynthesisUtterance(td.textContent);
-            utterance.lang = 'zh-TW';
-            speechSynthesis.speak(utterance);
+        var accents = ['̄', '́', '̌', '̀'], neutral = '·', full = '？', half = '?',
+          z = 'ㄓㄔㄕㄖㄗㄘㄙ', j = 'ㄐㄑㄒ', init, med, fin, bad = new RegExp(
+            'ㄖㄚ|'.concat(
+            '[ㄉㄊㄋㄍㄎㄏㄓㄔㄕㄖㄗㄘㄙ]ㄛ|',
+            '[ㄅㄆㄈ]ㄜ|[^ㄧㄩ]ㄝ|[ㄈㄖ]ㄞ|',
+            '[ㄊㄎㄔㄖㄘㄙ]ㄟ|ㄈㄠ$|ㄅㄡ|[ㄉㄊㄌ]ㄣ|',
+            '.ㄧ[ㄛㄞ]|[ㄅㄆㄇㄈㄋㄌ]ㄧㄚ|',
+            '[ㄅㄆㄊ]ㄧㄡ|[ㄉㄊ]ㄧㄤ|',
+            '[^ㄍㄎㄏㄓㄔㄕ]ㄨ[ㄚㄞㄤ]|',
+            '[ㄅㄆㄇㄈ]ㄨ[ㄛㄟㄢㄣㄥ]|',
+            '[ㄋㄌ]ㄨㄟ|ㄋㄨㄣ|ㄕㄨㄥ|',
+            'ㄋㄩ[ㄢㄣㄥ]|ㄌㄩ[ㄢㄥ]'), 'u');
+        function speak() {
+          var utterance = new SpeechSynthesisUtterance('text' in this.dataset ? this.dataset.text : this.textContent);
+          utterance.lang = 'zh-TW';
+          speechSynthesis.speak(utterance);
+        }
+        function select() {
+          var index = 0;
+          for (var sibling = this; sibling; sibling = sibling.previousElementSibling) {
+            if (sibling instanceof HTMLTableCellElement) {
+              index += (sibling.colSpan || 1);
+            }
+          }
+          if (11 >= index && index >= 6) {
+            if (init) {
+              init.classList.remove('selected');
+            }
+            if (init === this) {
+              init = null;
+            } else {
+              init = this;
+              this.classList.add('selected');
+              if (med && med.dataset.noInitials && med.dataset.noInitials.includes(this.textContent)) {
+                med.classList.remove('selected');
+                med = null;
+              }
+              if (fin && (fin.textContent == 'ㄦ' || !med && j.includes(this.textContent))) {
+                fin.classList.remove('selected');
+                fin = null;
+              }
+            }
+          } else if (6 > index && index > 4) {
+            if (med) {
+              med.classList.remove('selected');
+            }
+            if (med === this) {
+              med = null;
+              if (init && fin && j.includes(init.textContent)) {
+                init.classList.remove('selected');
+                init = null;
+                fin.classList.remove('selected');
+                fin = null;
+              }
+            } else {
+              med = this;
+              this.classList.add('selected');
+              if (init && this.dataset.noInitials && this.dataset.noInitials.includes(init.textContent)) {
+                init.classList.remove('selected');
+                init = null;
+              }
+              if (fin && (fin.textContent == 'ㄦ' || this.dataset.noFinals && this.dataset.noFinals.includes(fin.textContent))) {
+                fin.classList.remove('selected');
+                fin = null;
+              }
+            }
+          } else if (4 >= index && index >= 1) {
+            if (fin) {
+              fin.classList.remove('selected');
+            }
+            if (fin === this) {
+              fin = null;
+            } else {
+              fin = this;
+              this.classList.add('selected');
+              if (this.textContent == 'ㄦ') {
+                if (init) {
+                  init.classList.remove('selected');
+                  init = null;
+                }
+                if (med) {
+                  med.classList.remove('selected');
+                  med = null;
+                }
+              } else if (init && !med && j.includes(init.textContent)) {
+                init.classList.remove('selected');
+                init = null;
+              } else if (med && med.dataset.noFinals && med.dataset.noFinals.includes(this.textContent)) {
+                med.classList.remove('selected');
+                med = null;
+              }
+            }
+          } else {
+            return;
+          }
+          var ih = init && !med && !fin && z.includes(init.textContent);
+          var text =
+            (init ? init.textContent : '') +
+            (med ? med.textContent : '') +
+            (fin ? fin.textContent : '');
+          var zhuyin =
+            (init ? init.textContent : '') +
+            (ih ? 'ㄭ' :
+              (med ? med.textContent : '') +
+              (fin ? fin.textContent : ''));
+          if (!ih && !med && !fin || bad.test(text)) {
+            text = '';
+            zhuyin += full;
+          }
+          var p0 = init ? init.dataset.pinyin : '',
+              p1 = med ? med.dataset.pinyin : '',
+              p2 = ih ? 'i' : fin ? fin.dataset.pinyin : '';
+          if (!p0) {
+            if (p1 == 'u') {
+              p1 = p2 ? 'w' : 'wu';
+            } else if (p1 == 'i') {
+              p1 = p2 ? 'y' : 'yi';
+            } else if (p1 == 'ü') {
+              p1 = 'yu';
+            }
+          }
+          if ((p0 == 'j' || p0 == 'q' || p0 == 'x') && p1 == 'ü') {
+            p1 = 'u';
+          }
+          if (p0) {
+            if (p1 == 'i' && p2 == 'ou') {
+              p2 = 'u';
+            } else if (p1 == 'u' && p2 == 'ei') {
+              p2 = 'i';
+            } else if (p1 == 'u' && p2 == 'en') {
+              p2 = 'n';
+            }
+          }
+          if ((p0 || p1) && p2 == 'ê') {
+            p2 = 'e';
+          }
+          var pinyin = p0 + p1 + p2 + (!ih && !p1 && !p2 ? half : '');
+          var ins = (/[ae]/.exec(pinyin) || /ou/.exec(pinyin) || /[aeêiouü]/.exec(pinyin) || {'index': pinyin.length - 1}).index + 1;
+          Array.prototype.forEach.call(document.querySelectorAll('.tones .zhuyin'), function(div, n) {
+            var td = div.closest('.tones td[data-pinyin]');
+            td.dataset.text = text ? text + div.nextSibling.textContent : '';
+            div.textContent = zhuyin;
+            td.dataset.pinyin = n < accents.length ?
+              pinyin.substr(0, ins) + accents[n] + pinyin.substr(ins) :
+              neutral + pinyin;
           });
+          console.log(zhuyin);
+        }
+        Array.prototype.forEach.call(document.querySelectorAll('td[data-pinyin]'), function(td) {
+          td.addEventListener('click', speak);
+          if (td.closest && td.closest('.bopomofo')) {
+            td.addEventListener('click', select);
+            if (td.dataset.pinyin == 'm' || td.dataset.pinyin == 'a') {
+              select.call(td);
+            }
+          }
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('.tones div'), function(div) {
+          div.classList.add('zhuyin');
         });
       });
     </script>
@@ -91,9 +255,9 @@
         <tr><th colspan=4>finals<th>medials<th colspan=6>initials</tr>
       </thead>
       <tbody>
-      <tr><td data-pinyin='er'>ㄦ<td data-pinyin='an'>ㄢ<td data-pinyin='ai'>ㄞ<td data-pinyin='a'>ㄚ<td data-pinyin='i/y'>ㄧ<td data-pinyin='z'>ㄗ<td data-pinyin='zh'>ㄓ<td data-pinyin='j'>ㄐ<td data-pinyin='g'>ㄍ<td data-pinyin='d'>ㄉ<td data-pinyin='b'>ㄅ</tr>
-        <tr><td><td data-pinyin='en'>ㄣ<td data-pinyin='ei'>ㄟ<td data-pinyin='o'>ㄛ<td data-pinyin='u/w'>ㄨ<td data-pinyin='c'>ㄘ<td data-pinyin='ch'>ㄔ<td data-pinyin='q'>ㄑ<td data-pinyin='k'>ㄎ<td data-pinyin='t'>ㄊ<td data-pinyin='p'>ㄆ</tr>
-        <tr><td><td data-pinyin='ang'>ㄤ<td data-pinyin='ao'>ㄠ<td data-pinyin='e'>ㄜ<td data-pinyin='ü/yu'>ㄩ<td data-pinyin='s'>ㄙ<td data-pinyin='sh'>ㄕ<td data-pinyin='x'>ㄒ<td data-pinyin='h'>ㄏ<td data-pinyin='n'>ㄋ<td data-pinyin='m'>ㄇ</tr>
+      <tr><td data-pinyin='er'>ㄦ<td data-pinyin='an'>ㄢ<td data-pinyin='ai'>ㄞ<td data-pinyin='a'>ㄚ<td data-pinyin='i' data-no-initials='ㄈㄍㄎㄏㄓㄔㄕㄖㄗㄘㄙ' data-no-finals='ㄜㄟ'>ㄧ<td data-pinyin='z'>ㄗ<td data-pinyin='zh'>ㄓ<td data-pinyin='j'>ㄐ<td data-pinyin='g'>ㄍ<td data-pinyin='d'>ㄉ<td data-pinyin='b'>ㄅ</tr>
+        <tr><td><td data-pinyin='en'>ㄣ<td data-pinyin='ei'>ㄟ<td data-pinyin='o'>ㄛ<td data-pinyin='u' data-no-initials='ㄐㄑㄒ' data-no-finals='ㄜㄝㄠㄡ'>ㄨ<td data-pinyin='c'>ㄘ<td data-pinyin='ch'>ㄔ<td data-pinyin='q'>ㄑ<td data-pinyin='k'>ㄎ<td data-pinyin='t'>ㄊ<td data-pinyin='p'>ㄆ</tr>
+        <tr><td><td data-pinyin='ang'>ㄤ<td data-pinyin='ao'>ㄠ<td data-pinyin='e'>ㄜ<td data-pinyin='ü' data-no-initials='ㄅㄆㄇㄈㄉㄊㄍㄎㄏㄓㄔㄕㄖㄗㄘㄙ' data-no-finals='ㄚㄛㄜㄞㄟㄠㄡㄤ'>ㄩ<td data-pinyin='s'>ㄙ<td data-pinyin='sh'>ㄕ<td data-pinyin='x'>ㄒ<td data-pinyin='h'>ㄏ<td data-pinyin='n'>ㄋ<td data-pinyin='m'>ㄇ</tr>
         <tr><td><td data-pinyin='eng'>ㄥ<td data-pinyin='ou'>ㄡ<td data-pinyin='ê'>ㄝ<td colspan=2><td data-pinyin='r'>ㄖ<td colspan=2><td data-pinyin='l'>ㄌ<td data-pinyin='f'>ㄈ</tr>
       </tbody>
     </table>
@@ -102,7 +266,7 @@
         <tr><th>1<th>2<th>3<th>4<th></tr>
       </thead>
       <tbody>
-        <tr><td data-pinyin='mā'><div>ㄇㄚ</div><span>ˉ</span><td data-pinyin='má'><div>ㄇㄚ</div>ˊ<td data-pinyin='mǎ'><div>ㄇㄚ</div>ˇ<td data-pinyin='mà'><div>ㄇㄚ</div>ˋ<td data-pinyin='ma'><div>ㄇㄚ</div>˙</tr>
+        <tr><td data-pinyin='mā'><div>ㄇㄚ</div><span>ˉ</span><td data-pinyin='má'><div>ㄇㄚ</div><span>ˊ</span><td data-pinyin='mǎ'><div>ㄇㄚ</div><span>ˇ</span><td data-pinyin='mà'><div>ㄇㄚ</div><span>ˋ</span><td data-pinyin='·ma'><div>ㄇㄚ</div><span>˙</span></tr>
       </tbody>
     </table>
   </body>
