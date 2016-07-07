@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset='utf-8'>
+    <meta name='google' content='notranslate'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>bopomofo</title>
-    <meta name="google" content="notranslate">
     <style>
       body {
         display: flex;
@@ -10,8 +12,16 @@
         text-align: center;
       }
       table {
+        caption-side: bottom;
         margin: auto;
         white-space: nowrap;
+      }
+      caption {
+        font-size: 80%;
+        white-space: normal;
+      }
+      small {
+        color: rgba(0, 0, 0, 0.4);
       }
       td[data-pinyin] {
         font-size: 200%;
@@ -33,18 +43,18 @@
       .bopomofo tbody td:nth-child(8),
       .bopomofo tbody td:nth-child(7),
       .bopomofo tbody td:nth-child(6) {
-        color: rgba(0, 0, 139, 255);
+        color: rgb(0, 0, 139);
       }
       .bopomofo thead th:nth-child(2),
       .bopomofo tbody td:nth-child(5) {
-        color: rgba(0, 100, 0, 255);
+        color: rgb(0, 100, 0);
       }
       .bopomofo thead th:nth-child(1),
       .bopomofo tbody td:nth-child(4),
       .bopomofo tbody td:nth-child(3),
       .bopomofo tbody td:nth-child(2),
       .bopomofo tbody td:nth-child(1) {
-        color: rgba(139, 0, 0, 255);
+        color: rgb(139, 0, 0);
       }
       .bopomofo .selected {
         background-color: #fff8dc;
@@ -188,7 +198,7 @@
             (fin ? fin.textContent : '');
           var zhuyin =
             (init ? init.textContent : '') +
-            (ih ? 'ㄭ' :
+            (ih ? '<small>ㄭ</small>' :
               (med ? med.textContent : '') +
               (fin ? fin.textContent : ''));
           if (!ih && !med && !fin || bad.test(text)) {
@@ -227,12 +237,11 @@
           Array.prototype.forEach.call(document.querySelectorAll('.tones .zhuyin'), function(div, n) {
             var td = div.closest('.tones td[data-pinyin]');
             td.dataset.text = text ? text + div.nextSibling.textContent : '';
-            div.textContent = zhuyin;
+            div.innerHTML = zhuyin;
             td.dataset.pinyin = n < accents.length ?
               pinyin.substr(0, ins) + accents[n] + pinyin.substr(ins) :
               neutral + pinyin;
           });
-          console.log(zhuyin);
         }
         Array.prototype.forEach.call(document.querySelectorAll('td[data-pinyin]'), function(td) {
           td.addEventListener('click', speak);
@@ -251,6 +260,7 @@
   </head>
   <body>
     <table class='bopomofo'>
+      <caption>all zhùyīn fúhào (click to select and listen)</caption>
       <thead>
         <tr><th colspan=4>finals<th>medials<th colspan=6>initials</tr>
       </thead>
@@ -262,6 +272,7 @@
       </tbody>
     </table>
     <table class='tones'>
+      <caption>(not all syllable+tone combinations exist in the language)</caption>
       <thead>
         <tr><th>1<th>2<th>3<th>4<th></tr>
       </thead>
