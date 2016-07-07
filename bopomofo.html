@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>bopomofo</title>
+    <meta name="google" content="notranslate">
+    <style>
+      body {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+      }
+      table {
+        margin: auto;
+        white-space: nowrap;
+      }
+      td[data-pinyin] {
+        font-size: 200%;
+        position: relative;
+        padding-top: 0.25em;
+      }
+      td[data-pinyin]::after {
+        content: attr(data-pinyin);
+        display: block;
+        font-size: 40%;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      .bopomofo thead th:nth-child(3),
+      .bopomofo tbody td:nth-child(11),
+      .bopomofo tbody td:nth-child(10),
+      .bopomofo tbody td:nth-child(9),
+      .bopomofo tbody td:nth-child(8),
+      .bopomofo tbody td:nth-child(7),
+      .bopomofo tbody td:nth-child(6) {
+        color: rgba(0, 0, 139, 255);
+      }
+      .bopomofo thead th:nth-child(2),
+      .bopomofo tbody td:nth-child(5) {
+        color: rgba(0, 100, 0, 255);
+      }
+      .bopomofo thead th:nth-child(1),
+      .bopomofo tbody td:nth-child(4),
+      .bopomofo tbody td:nth-child(3),
+      .bopomofo tbody td:nth-child(2),
+      .bopomofo tbody td:nth-child(1) {
+        color: rgba(139, 0, 0, 255);
+      }
+      .tones thead th {
+        height: 3em;
+        width: 3em;
+      }
+      .tones thead th:nth-child(1) {
+        background: url(data:image/svg+xml,<svg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2710%27%20height=%2710%27><path%20d=%27M2,1L8,1%27%20stroke=%27#ffc0cb%27%20stroke-width=%271%27%20stroke-linecap=%27round%27/></svg>) no-repeat center/contain;
+      }
+      .tones thead th:nth-child(2) {
+        background: url(data:image/svg+xml,<svg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2710%27%20height=%2710%27><path%20d=%27M2,5L8,1%27%20stroke=%27#ffc0cb%27%20stroke-width=%271%27%20stroke-linecap=%27round%27/></svg>) no-repeat center/contain;
+      }
+      .tones thead th:nth-child(3) {
+        background: url(data:image/svg+xml,<svg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2710%27%20height=%2710%27><path%20d=%27M2,7L5,9L8,3%27%20fill=%27none%27%20stroke=%27#ffc0cb%27%20stroke-width=%271%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27/></svg>) no-repeat center/contain;
+      }
+      .tones thead th:nth-child(4) {
+        background: url(data:image/svg+xml,<svg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2710%27%20height=%2710%27><path%20d=%27M2,1L8,9%27%20stroke=%27#ffc0cb%27%20stroke-width=%271%27%20stroke-linecap=%27round%27/></svg>) no-repeat center/contain;
+      }
+      .tones thead th:nth-child(5) {
+        background: url(data:image/svg+xml,<svg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2710%27%20height=%2710%27><circle%20cx=%275%27%20cy=%275%27%20r=%271%27%20fill=%27#ffc0cb%27/></svg>) no-repeat center/contain;
+      }
+      .tones tbody div {
+        display: inline-block;
+        writing-mode: vertical-rl;
+      }
+      .tones tbody span {
+        visibility: hidden;
+      }
+    </style>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        Array.prototype.forEach.call(document.querySelectorAll('td[data-pinyin]'), function(td) {
+          td.addEventListener('click', function(e) {
+            var utterance = new SpeechSynthesisUtterance(td.textContent);
+            utterance.lang = 'zh-TW';
+            speechSynthesis.speak(utterance);
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <table class='bopomofo'>
+      <thead>
+        <tr><th colspan=4>finals<th>medials<th colspan=6>initials</tr>
+      </thead>
+      <tbody>
+      <tr><td data-pinyin='er'>ㄦ<td data-pinyin='an'>ㄢ<td data-pinyin='ai'>ㄞ<td data-pinyin='a'>ㄚ<td data-pinyin='i/y'>ㄧ<td data-pinyin='z'>ㄗ<td data-pinyin='zh'>ㄓ<td data-pinyin='j'>ㄐ<td data-pinyin='g'>ㄍ<td data-pinyin='d'>ㄉ<td data-pinyin='b'>ㄅ</tr>
+        <tr><td><td data-pinyin='en'>ㄣ<td data-pinyin='ei'>ㄟ<td data-pinyin='o'>ㄛ<td data-pinyin='u/w'>ㄨ<td data-pinyin='c'>ㄘ<td data-pinyin='ch'>ㄔ<td data-pinyin='q'>ㄑ<td data-pinyin='k'>ㄎ<td data-pinyin='t'>ㄊ<td data-pinyin='p'>ㄆ</tr>
+        <tr><td><td data-pinyin='ang'>ㄤ<td data-pinyin='ao'>ㄠ<td data-pinyin='e'>ㄜ<td data-pinyin='ü/yu'>ㄩ<td data-pinyin='s'>ㄙ<td data-pinyin='sh'>ㄕ<td data-pinyin='x'>ㄒ<td data-pinyin='h'>ㄏ<td data-pinyin='n'>ㄋ<td data-pinyin='m'>ㄇ</tr>
+        <tr><td><td data-pinyin='eng'>ㄥ<td data-pinyin='ou'>ㄡ<td data-pinyin='ê'>ㄝ<td colspan=2><td data-pinyin='r'>ㄖ<td colspan=2><td data-pinyin='l'>ㄌ<td data-pinyin='f'>ㄈ</tr>
+      </tbody>
+    </table>
+    <table class='tones'>
+      <thead>
+        <tr><th>1<th>2<th>3<th>4<th></tr>
+      </thead>
+      <tbody>
+        <tr><td data-pinyin='mā'><div>ㄇㄚ</div><span>ˉ</span><td data-pinyin='má'><div>ㄇㄚ</div>ˊ<td data-pinyin='mǎ'><div>ㄇㄚ</div>ˇ<td data-pinyin='mà'><div>ㄇㄚ</div>ˋ<td data-pinyin='ma'><div>ㄇㄚ</div>˙</tr>
+      </tbody>
+    </table>
+  </body>
+</html>
