@@ -32,6 +32,13 @@
         border-radius: 2px;
         margin: 0 1px;
       }
+      .finals .jamos *+*+*+*+*+*+*+*+*+*+*+*+*+*+.jamo {
+        opacity: 0.8;
+      }
+      .caption {
+        font-size: 80%;
+        text-align: center;
+      }
       .compose {
         display: flex;
         flex-direction: row;
@@ -176,8 +183,8 @@
                 }
               }
             });
-            var rb = init.dataset.jamo + med.dataset.jamo + (fin ? fin.dataset.jamo : '');
-            var rt = init.querySelector('rt').textContent + med.querySelector('rt').textContent + (fin ? fin.querySelector('rt').textContent : '');
+            var rb = (init.dataset.jamo + med.dataset.jamo + (fin ? fin.dataset.jamo : '')).normalize();
+            var rt = (init.querySelector('rt').textContent.replace(/\/.*/, '') + med.querySelector('rt').textContent + (fin ? fin.querySelector('rt').textContent : '')).replace(/-/g, '');
             Array.prototype.forEach.call(document.querySelectorAll('.postcompose'), function(post) {
               Array.prototype.forEach.call(post.querySelectorAll('rb'), function(e) {
                 e.textContent = rb;
@@ -281,7 +288,7 @@
         <div class='jamo' data-name='미음' data-jamo='ᆷ'><ruby><rb>ㅁ</rb><rt>m</rt></div>
         <div class='jamo' data-name='비읍' data-jamo='ᆸ'><ruby><rb>ㅂ</rb><rt>b</rt></div>
         <div class='jamo' data-name='시옷' data-jamo='ᆺ'><ruby><rb>ㅅ</rb><rt>s</rt></div>
-        <div class='jamo selected' data-name='이응' data-jamo='ᆼ'><ruby><rb>ㆁ</rb><rt>ng</rt></div>
+        <div class='jamo selected' data-name='이응' data-jamo='ᆼ'><ruby><rb>ㅇ</rb><rt>ng</rt></div>
         <div class='jamo' data-name='지읒' data-jamo='ᆽ'><ruby><rb>ㅈ</rb><rt>j</rt></div>
         <div class='jamo' data-name='치읓' data-jamo='ᆾ'><ruby><rb>ㅊ</rb><rt>ch</rt></div>
         <div class='jamo' data-name='키읔' data-jamo='ᆿ'><ruby><rb>ㅋ</rb><rt>k</rt></div>
@@ -303,6 +310,7 @@
         <div class='jamo' data-name='리을히읗' data-jamo='ᆶ' data-l1='ㄹ' data-l2='ㅎ'><ruby><rb>ㅀ</rb><rt>lh</rt></div>
       </div>
     </div>
+    <div class='caption'>(click to select and listen)</div>
     <div class='compose'>
       <div class='precompose imf lr' dir='ltr'>
         <div class='cvv'>
@@ -313,7 +321,7 @@
           <div class='jamo medial2'><ruby><rb></rb><rt></rt></ruby></div>
         </div>
         <div class='cc'>
-          <div class='jamo final' data-name='이응'><ruby><rb>ㆁ</rb><rt>ng</rt></ruby></div>
+          <div class='jamo final' data-name='이응'><ruby><rb>ㅇ</rb><rt>ng</rt></ruby></div>
           <div class='jamo final2'><ruby><rb></rb><rt></rt></ruby></div>
         </div>
       </div>
@@ -326,6 +334,5 @@
         <ruby><rb>녕</rb><rt>nyeong</rt></ruby>
       </div>
     </div>
-    <center>(composed transliteration is not accurate)</center>
   </body>
 </html>
