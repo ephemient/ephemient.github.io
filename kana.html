@@ -100,11 +100,24 @@
                 });
                 if (!tr.classList.contains('selected')) {
                   tr.classList.add('selected');
-                  Array.prototype.forEach.call(mora.querySelectorAll('.hiragana span'), function(span) {
-                    span.textContent = tr.dataset.hiragana;
-                  });
-                  Array.prototype.forEach.call(mora.querySelectorAll('.katakana span'), function(span) {
-                    span.textContent = tr.dataset.katakana;
+                  Array.prototype.forEach.call(mora.querySelectorAll('span'), function(span) {
+                    if (span.closest('.hiragana')) {
+                      if (span.classList.contains('sokuon')) {
+                        span.textContent = tr.dataset.n ? 'ん' : 'っ';
+                      } else if (span.classList.contains('alternate')) {
+                        span.textContent = tr.dataset.alternateHiragana || '';
+                      } else {
+                        span.textContent = tr.dataset.hiragana;
+                      }
+                    } else if (span.closest('.katakana')) {
+                      if (span.classList.contains('sokuon')) {
+                        span.textContent = tr.dataset.n ? 'ン' : 'ッ';
+                      } else if (span.classList.contains('alternate')) {
+                        span.textContent = tr.dataset.alternateKatakana || '';
+                      } else {
+                        span.textContent = tr.dataset.katakana;
+                      }
+                    }
                   });
                 }
               });
@@ -195,6 +208,14 @@
         <tr data-hiragana='つ' data-katakana='ツ' ><td><th colspan=2>〜〜tsu<th colspan=2>〜ttsu<th colspan=2>〜n</tr>
         <tr data-hiragana='て' data-katakana='テ' ><td><th colspan=2>〜〜te<th colspan=2>〜tte<th colspan=2>〜n</tr>
         <tr data-hiragana='と' data-katakana='ト' ><td><th colspan=2>〜〜to<th colspan=2>〜tto<th colspan=2>〜n</tr>
+        <tr data-hiragana='な' data-alternate-hiragana='あ' data-katakana='ナ' data-alternate-katakana='ア' data-n='1'><td><th colspan=2>〜〜na<th colspan=2>〜nna<th colspan=2>〜n'a</tr>
+        <tr data-hiragana='に' data-alternate-hiragana='い' data-katakana='ニ' data-alternate-katakana='イ' data-n='1'><td><th colspan=2>〜〜ni<th colspan=2>〜nni<th colspan=2>〜n'i</tr>
+        <tr data-hiragana='ぬ' data-alternate-hiragana='う' data-katakana='ヌ' data-alternate-katakana='ウ' data-n='1'><td><th colspan=2>〜〜nu<th colspan=2>〜nnu<th colspan=2>〜n'u</tr>
+        <tr data-hiragana='ね' data-alternate-hiragana='え' data-katakana='ネ' data-alternate-katakana='エ' data-n='1'><td><th colspan=2>〜〜ne<th colspan=2>〜nne<th colspan=2>〜n'e</tr>
+        <tr data-hiragana='の' data-alternate-hiragana='お' data-katakana='ノ' data-alternate-katakana='オ' data-n='1'><td><th colspan=2>〜〜no<th colspan=2>〜nno<th colspan=2>〜n'o</tr>
+        <tr data-hiragana='にゃ' data-alternate-hiragana='や' data-katakana='ニャ' data-alternate-katakana='ヤ' data-n='1'><td><th colspan=2>〜〜nya<th colspan=2>〜nnya<th colspan=2>〜n'ya</tr>
+        <tr data-hiragana='にゅ' data-alternate-hiragana='ゆ' data-katakana='ニュ' data-alternate-katakana='ユ' data-n='1'><td><th colspan=2>〜〜nyu<th colspan=2>〜nnyu<th colspan=2>〜n'yu</tr>
+        <tr data-hiragana='にょ' data-alternate-hiragana='よ' data-katakana='ニョ' data-alternate-katakana='ヨ' data-n='1'><td><th colspan=2>〜〜nyo<th colspan=2>〜nnyo<th colspan=2>〜n'yo</tr>
         <tr data-hiragana='ぱ' data-katakana='パ'><td><th colspan=2>〜〜pa<th colspan=2>〜ppa<th colspan=2>〜n</tr>
         <tr data-hiragana='ぴ' data-katakana='ピ' ><td><th colspan=2>〜〜pi<th colspan=2>〜ppi<th colspan=2>〜n</tr>
         <tr data-hiragana='ぷ' data-katakana='プ' ><td><th colspan=2>〜〜pu<th colspan=2>〜ppu<th colspan=2>〜n</tr>
@@ -205,11 +226,11 @@
         <tr data-hiragana='ぴょ' data-katakana='ピョ' ><td><th colspan=2>〜〜pyo<th colspan=2>〜ppyo<th colspan=2>〜n</tr>
       </thead>
       <tbody>
-        <tr><th>a<td class='hiragana'>ああ<span>か</span><td class='katakana'>アー<span>カ</span><td class='hiragana'>あっ<span>か</span><td class='katakana'>アッ<span>カ</span><td class='hiragana'>あん<td class='katakana'>アン</tr>
-        <tr><th>i<td class='hiragana'>いい<span>か</span><td class='katakana'>イー<span>カ</span><td class='hiragana'>いっ<span>か</span><td class='katakana'>イッ<span>カ</span><td class='hiragana'>いん<td class='katakana'>イン</tr>
-        <tr><th>u<td class='hiragana'>うう<span>か</span><td class='katakana'>ウー<span>カ</span><td class='hiragana'>うっ<span>か</span><td class='katakana'>ウッ<span>カ</span><td class='hiragana'>うん<td class='katakana'>ウン</tr>
-        <tr><th>e<td class='hiragana'>えい<span>か</span><td class='katakana'>エー<span>カ</span><td class='hiragana'>えっ<span>か</span><td class='katakana'>エッ<span>カ</span><td class='hiragana'>えん<td class='katakana'>エン</tr>
-        <tr><th>o<td class='hiragana'>おう<span>か</span><td class='katakana'>オー<span>カ</span><td class='hiragana'>おっ<span>か</span><td class='katakana'>オッ<span>カ</span><td class='hiragana'>おん<td class='katakana'>オン</tr>
+        <tr><th>a<td class='hiragana'>ああ<span>か</span><td class='katakana'>アー<span>カ</span><td class='hiragana'>あ<span class='sokuon'>っ</span><span>か</span><td class='katakana'>ア<span class='sokuon'>ッ</span><span>カ</span><td class='hiragana'>あん<span class='alternate'></span><td class='katakana'>アン<span class='alternate'></span></tr>
+        <tr><th>i<td class='hiragana'>いい<span>か</span><td class='katakana'>イー<span>カ</span><td class='hiragana'>い<span class='sokuon'>っ</span><span>か</span><td class='katakana'>イ<span class='sokuon'>ッ</span><span>カ</span><td class='hiragana'>いん<span class='alternate'></span><td class='katakana'>イン<span class='alternate'></span></tr>
+        <tr><th>u<td class='hiragana'>うう<span>か</span><td class='katakana'>ウー<span>カ</span><td class='hiragana'>う<span class='sokuon'>っ</span><span>か</span><td class='katakana'>ウ<span class='sokuon'>ッ</span><span>カ</span><td class='hiragana'>うん<span class='alternate'></span><td class='katakana'>ウン<span class='alternate'></span></tr>
+        <tr><th>e<td class='hiragana'>えい<span>か</span><td class='katakana'>エー<span>カ</span><td class='hiragana'>え<span class='sokuon'>っ</span><span>か</span><td class='katakana'>エ<span class='sokuon'>ッ</span><span>カ</span><td class='hiragana'>えん<span class='alternate'></span><td class='katakana'>エン<span class='alternate'></span></tr>
+        <tr><th>o<td class='hiragana'>おう<span>か</span><td class='katakana'>オー<span>カ</span><td class='hiragana'>お<span class='sokuon'>っ</span><span>か</span><td class='katakana'>オ<span class='sokuon'>ッ</span><span>カ</span><td class='hiragana'>おん<span class='alternate'></span><td class='katakana'>オン<span class='alternate'></span></tr>
       </tbody>
     </table>
     <div>A vowel is lengthened by adding a vowel <q>あ</q><q>い</q><q>う</q> or chōonpu <q>ー</q> after.</div>
