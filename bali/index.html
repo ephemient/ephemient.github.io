@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bali</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+    <style>
+body {
+  text-align: center;
+  margin: 1em 0;
+}
+.album-link {
+  background-position: 50% 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: inline-block;
+  width: 800px;
+  height: 600px;
+  width: calc(100vw - 2em);
+  height: calc(100vh - 2em);
+  position: relative;
+}
+.album-name {
+  display: inline-block;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  text-align: right;
+  padding: 0.5em;
+  color: white;
+  text-shadow: 0 0 1px black, 0 0 2px black, 0 0 4px black, 0 0 8px black;
+}
+    </style>
+    <script src='https://apis.google.com/js/platform.js' async defer></script>
+    <script>
+var API_KEY = 'AIzaSyBUe2YVqRCZxs87XXcVvknluaqPuC8bzhg';
+var SCOPES = ['https://www.googleapis.com/auth/drive.files.readonly'];
+function init() {
+  gapi.client.setApiKey(API_KEY);
+  gapi.client.load('drive', 'v3', loadImages);
+}
+function loadImages() {
+  var batch = gapi.client.newBatch();
+  Array.prototype.forEach.call(document.querySelectorAll('*[data-file-id]'), function(e) {
+    var request = gapi.client.drive.files.get({
+      'fileId': e.dataset.fileId,
+      'fields': 'id,name,mimeType,imageMediaMetadata(height,width),webContentLink,thumbnailLink'
+    });
+    batch.add(request, {'callback': loadImage.bind(e)});
+  });
+  batch.execute(appendPre);
+}
+function loadImage(resp) {
+  var background = this.style.backgroundImage;
+  if (resp.result && resp.result.webContentLink) {
+    background += ', url("' + resp.result.webContentLink + '")';
+  }
+  if (resp.result && resp.result.thumbnailLink) {
+    background += ', url("' + resp.result.thumbnailLink + '")';
+  }
+  this.style.backgroundImage = background.startsWith(', ') ? background.substr(2) : background;
+}
+function appendPre(obj) {
+  var pre = document.getElementById('output');
+  var textContent = document.createTextNode(JSON.stringify(obj) + '\n');
+  pre.appendChild(textContent);
+}
+    </script>
+    <script src='https://apis.google.com/js/client.js?onload=init'></script>
+  </head>
+  <body>
+    <h1>Bali</h1>
+    <h2>03 September 2016 - 10 September 2016</h2>
+    <div>
+      <div class='g-person' data-href='https://plus.google.com/105328356001135856422' data-rel='author' data-layout='landscape'></div>
+      <div class='g-person' data-href='https://plus.google.com/113865650088711985867' data-rel='author' data-layout='landscape'></div></div>
+    <a href='https://goo.gl/photos/L3zEDmone688TnrU6' class='album-link' data-file-id='1K7KWrv-heF4Jr8iePYjDWFo5j_22CEsK1g'>
+      <div class='album-name'>⚞Hello Kitty⚟ EVA Air</div>
+    </a>
+    <a href='https://goo.gl/photos/1iYSM2a33TZpdi7c7' class='album-link' data-file-id='1Y_mtNbkvDt6Pec2gsIfBVhAfxQ6ILKwstw'>
+      <div class='album-name'>The Laguna, a Luxury Collection Resort &amp; Spa, Nusa Dua, Bali</div>
+    </a>
+    <a href='https://goo.gl/photos/CiQYZiKJcZpqxKC7A' class='album-link' data-file-id='0BwtLdfp6GJ0OUEJ4d3V6X2hMZ00'>
+      <div class='album-name'>Ubud Monkey Forest</div>
+    </a>
+    <a href='https://goo.gl/photos/2hvvouUDgDJM6EET6' class='album-link' data-file-id='121MlHqBgHdZ7MvTlMNo-74XkfaQi0p_QpA'>
+      <div class='album-name'>Waterbom</div>
+    </a>
+    <a href='https://goo.gl/photos/AMYgZp9MBeyB59A4A' class='album-link' data-file-id='0BwtLdfp6GJ0OZFlyNVB3aEZRV3c'>
+      <div class='album-name'>Jay &amp; Crystal / Bulgari Resort Bali</div>
+    </a>
+    <a href='https://goo.gl/photos/6WpcLCqeTvJG1MDd9' class='album-link' data-file-id='0BwtLdfp6GJ0OdThncFFsdlcwLW8'>
+      <div class='album-name'>Bali Zoo</div>
+    </a>
+    <a href='https://goo.gl/photos/Xqkj8ftXCryMjpBr7' class='album-link' data-file-id='0BwtLdfp6GJ0OLVVxTThxdVN1NDA'>
+      <div class='album-name'>Coffee Luwak Negari</div>
+    </a>
+    <a href='https://goo.gl/photos/JfTHn5jmoEkiRJVs9' class='album-link' data-file-id='0BwtLdfp6GJ0ONnJoMmNDR1F1MEE'>
+      <div class='album-name'>Tegenungan Waterfall</div>
+    </a>
+    <a href='https://goo.gl/photos/3aAd7yzSMMr2eFY19' class='album-link' data-file-id='0BwtLdfp6GJ0OZk44SlZRZGdrYVk'>
+      <div class='album-name'>Island Mermaids - Discover Mermaiding Bali</div>
+    </a>
+    <a href='https://goo.gl/photos/pUdEquMF4eijY2rt5' class='album-link' data-file-id='0BwtLdfp6GJ0OaFVZeFd1NEloSWc'>
+      <div class='album-name'>Four Points by Sheraton at Bali, Kuta</div>
+    </a>
+    <a href='https://goo.gl/photos/fsic65v7eUtEwg4w5' class='album-link' data-file-id='0BwtLdfp6GJ0OXzBzRWE2LXhnZnc'>
+      <div class='album-name'>Kuta Beach Sunsets</div>
+    </a>
+    <pre id='output' style='display: none'></pre>
+  </body>
+</html>
