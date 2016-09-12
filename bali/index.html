@@ -43,31 +43,46 @@ body {
     <script src='https://apis.google.com/js/platform.js' async defer></script>
     <script>
 var API_KEY = 'AIzaSyBUe2YVqRCZxs87XXcVvknluaqPuC8bzhg';
-var SCOPES = ['https://www.googleapis.com/auth/drive.files.readonly'];
 function init() {
   gapi.client.setApiKey(API_KEY);
   gapi.client.load('drive', 'v3', loadImages);
 }
 function loadImages() {
+  window.onresize = loadImages;
   var batch = gapi.client.newBatch();
   Array.prototype.forEach.call(document.querySelectorAll('*[data-file-id]'), function(e) {
     var request = gapi.client.drive.files.get({
       'fileId': e.dataset.fileId,
-      'fields': 'id,name,mimeType,imageMediaMetadata(height,width),webContentLink,thumbnailLink'
+      'fields': 'id,name,mimeType,imageMediaMetadata(height,width),thumbnailLink'
     });
     batch.add(request, {'callback': loadImage.bind(e)});
   });
   batch.execute(appendPre);
 }
 function loadImage(resp) {
-  var background = this.style.backgroundImage;
-  if (resp.result && resp.result.webContentLink) {
-    background += ', url("' + resp.result.webContentLink + '")';
+  if (!resp || !resp.result) {
+    return;
   }
-  if (resp.result && resp.result.thumbnailLink) {
-    background += ', url("' + resp.result.thumbnailLink + '")';
+  var result = resp.result;
+  var backgrounds = ['url(' + JSON.stringify(result.thumbnailLink) + ')'];
+  var re = /=s(\d+)$/;
+  var match = re.exec(result.thumbnailLink);
+  if (match) {
+    var square = parseInt(match[1], 10);
+    if (square < this.clientWidth || square < this.clientHeight) {
+      square = 2 * Math.max(this.clientWidth, this.clientHeight);
+      if (result.imageMediaMetadata &&
+          square > result.imageMediaMetadata.width &&
+          square > result.imageMediaMetadata.height) {
+        square = Math.max(result.imageMediaMetadata.width, result.imageMediaMetadata.height);
+      }
+    }
+    var background = 'url(' + JSON.stringify(result.thumbnailLink.replace(re, '=s' + square)) + ')';
+    if (background != result.thumbnailLink) {
+      backgrounds.unshift(background);
+    }
   }
-  this.style.backgroundImage = background.startsWith(', ') ? background.substr(2) : background;
+  this.style.backgroundImage = backgrounds.join(', ');
 }
 function appendPre(obj) {
   var pre = document.getElementById('output');
