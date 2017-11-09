@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>memory game</title>
+        <link href='style.css' rel='stylesheet'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'>
+    </head>
+    <body>
+        <div class='score'>
+            <div>Moves: <span id='moves'>0</span></div>
+            <div><a href='#' id='reset'>reset</a></div>
+        </div>
+        <div class='board'></div>
+        <script src='game.js'></script>
+        <script>
+            const moves = document.getElementById('moves');
+            const reset = document.getElementById('reset');
+            const board = document.querySelector('.board');
+            const symbols = [
+                '0', '1', '2', '3', '4',
+                '0', '1', '2', '3', '4',
+                '5', '6', '7', '8', '9',
+                '5', '6', '7', '8', '9'
+            ];
+            function setupGame() {
+                moves.textContent = '0';
+                board.innerHTML = '';
+                new Game({board, symbols});
+            }
+            reset.addEventListener('click', function(event) {
+                event.preventDefault();
+                setupGame();
+            });
+            board.addEventListener(GAME_EVENT_MOVES, function(event) {
+                moves.textContent = event.detail;
+            });
+            board.addEventListener(GAME_EVENT_OVER, function(event) {
+                moves.textContent += ' (game over)';
+            });
+            setupGame();
+        </script>
+    </body>
+</html>
