@@ -1,10 +1,17 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/materialicons/v31/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+
 ::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
+    display: none;
 }
 
 body {
     margin: 2vw;
+    text-align: center;
 }
 
 .score {
@@ -15,10 +22,11 @@ body {
 
 .board {
     background-color: darkgrey;
-    display: grid;
+    display: inline-grid;
     grid-template-rows: repeat(4, 18vw);
     grid-template-columns: repeat(5, 18vw);
     grid-gap: 1vw;
+    margin: 0 -2vw;
     padding: 1vw;
     border-radius: 1vw;
 }
@@ -31,7 +39,7 @@ body {
     }
 }
 
-.board > * {
+.board .card {
     border-radius: 1vw;
     background-color: black;
     color: black;
@@ -44,26 +52,41 @@ body {
     transition-timing-function: ease, frames(2);
 }
 
-.board > .closed {
+.board .card.closed {
     transform: rotateY(180deg);
 }
 
-.board > :not(.closed) {
+.board .card:not(.closed) {
     transform: rotateY(0deg);
 }
 
-.board > .opened, .board > .mismatch {
+.board .card.opened, .board .card.mismatch {
     background-color: white;
 }
 
-.board > .matched {
+.board .card.matched {
     background-color: lightgrey;
 }
 
-.board > .mismatch {
+.board .card.mismatch {
     color: red;
 }
 
-.board > :not(closed)::before {
+.board .card:not(closed)::before {
     content: attr(data-symbol);
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 48px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
 }

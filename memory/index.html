@@ -10,31 +10,52 @@
             <div>Moves: <span id='moves'>0</span></div>
             <div><a href='#' id='reset'>reset</a></div>
         </div>
-        <div class='board'></div>
+        <div class='board'>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+            <div class='card'></div>
+        </div>
         <script src='game.js'></script>
         <script>
             const moves = document.getElementById('moves');
             const reset = document.getElementById('reset');
             const board = document.querySelector('.board');
             const symbols = [
-                '0', '1', '2', '3', '4',
-                '0', '1', '2', '3', '4',
-                '5', '6', '7', '8', '9',
-                '5', '6', '7', '8', '9'
+                'android', 'backup', 'delete', 'explore', 'face',
+                'android', 'backup', 'delete', 'explore', 'face',
+                'favorite', 'room', 'stars', 'visibility', 'work',
+                'favorite', 'room', 'stars', 'visibility', 'work'
             ];
+            const elements = board.querySelectorAll('.card');
             function setupGame() {
                 moves.textContent = '0';
-                board.innerHTML = '';
-                new Game({board, symbols});
+                new Game({board, symbols, elements});
             }
             reset.addEventListener('click', function(event) {
                 event.preventDefault();
                 setupGame();
             });
-            board.addEventListener(GAME_EVENT_MOVES, function(event) {
+            board.addEventListener(Game.Events.MOVES, function(event) {
                 moves.textContent = event.detail;
             });
-            board.addEventListener(GAME_EVENT_OVER, function(event) {
+            board.addEventListener(Game.Events.OVER, function(event) {
                 moves.textContent += ' (game over)';
             });
             setupGame();

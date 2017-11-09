@@ -1,8 +1,9 @@
 'use strict';
 
+
 function shuffle(...array) {
-    for (let i = 0; i < array.length; i++) {
-        let j = Math.floor(Math.random() * i);
+    for (let i = 1; i < array.length; i++) {
+        let j = Math.floor(Math.random() * (i + 1));
         const tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;
@@ -10,97 +11,91 @@ function shuffle(...array) {
     return array;
 }
 
-const CARD_STATE_CLOSED = Symbol();
-const CARD_STATE_OPENED = Symbol();
-const CARD_STATE_MISMATCH = Symbol();
-const CARD_STATE_MATCHED = Symbol();
 
 class Card {
-    constructor({symbol, element, state = CARD_STATE_CLOSED}) {
+    constructor({symbol, element, state = Card.State.CLOSED}) {
         this.symbol = symbol;
         this.element = element;
         this.state = state;
-        this.element.classList.add(Card.cssClassForState(state));
+        for (const key of Object.getOwnPropertySymbols(Card.CSSClass)) {
+            this.element.classList.remove(Card.CSSClass[key]);
+        }
+        this.element.classList.add(Card.CSSClass[state]);
     }
 
     get isMatched() {
-        return this.state === CARD_STATE_MATCHED;
+        return this.state === Card.State.MATCHED;
     }
 
     matches(...cards) {
         return cards.every((card) => this.symbol === card.symbol);
     }
 
-    open() {
-        if (this.state !== CARD_STATE_CLOSED) {
+    tryOpen() {
+        if (this.state !== Card.State.CLOSED) {
             return false;
         }
-        this.setState(CARD_STATE_OPENED);
+        this.setState(Card.State.OPENED);
         return true;
     }
 
     close() {
-        this.setState(CARD_STATE_CLOSED);
+        this.setState(Card.State.CLOSED);
     }
 
     mismatch() {
-        this.setState(CARD_STATE_MISMATCH);
+        this.setState(Card.State.MISMATCH);
     }
 
     match() {
-        this.setState(CARD_STATE_MATCHED);
+        this.setState(Card.State.MATCHED);
     }
 
     setState(state) {
-        this.element.classList.remove(Card.cssClassForState(this.state));
-        this.element.classList.add(Card.cssClassForState(state));
+        this.element.classList.replace(Card.CSSClass[this.state], Card.CSSClass[state]);
         this.state = state;
-    }
-
-    static cssClassForState(state) {
-        switch (state) {
-            case CARD_STATE_CLOSED:
-                return 'closed';
-            case CARD_STATE_OPENED:
-                return 'opened';
-            case CARD_STATE_MISMATCH:
-                return 'mismatch';
-            case CARD_STATE_MATCHED:
-                return 'matched';
-        }
     }
 }
 
-const GAME_EVENT_MOVES = 'GameMoves';
-const GAME_EVENT_OVER = 'GameOver';
+Card.State = {
+    CLOSED: Symbol(),
+    OPENED: Symbol(),
+    MISMATCH: Symbol(),
+    MATCHED: Symbol()
+};
 
-const GAME_STATE_GUESSING = Symbol();
-const GAME_STATE_MISMATCH = Symbol();
-const GAME_STATE_OVER = Symbol();
+Card.CSSClass = function() {
+    const cssClass = {};
+    cssClass[Card.State.CLOSED] = 'closed';
+    cssClass[Card.State.OPENED] = 'opened';
+    cssClass[Card.State.MISMATCH] = 'mismatch';
+    cssClass[Card.State.MATCHED] = 'matched';
+    return cssClass;
+}();
 
-const GAME_SHOWING_TIMEOUT = 2000;
 
 class Game {
-    constructor({board, symbols, matchCount = 2}) {
+    constructor({board, symbols, elements, matchCount = 2, showTimeout = 2000}) {
         this.board = board;
         this.cards = [];
         this.openedCards = [];
         this.matchCount = matchCount;
-        for (const symbol of shuffle(...symbols)) {
-            const element = board.appendChild(document.createElement('div'));
+        this.showTimeout = showTimeout;
+        shuffle(...symbols).forEach((symbol, i) => {
+            const element = elements[i];
             element.dataset.symbol = symbol;
             const card = new Card({symbol, element});
             this.cards.push(card);
             element.addEventListener('click', this.onCardClick.bind(this, card));
-        }
+        });
         board.addEventListener('click', this.onBoardClick.bind(this));
-        this.state = GAME_STATE_GUESSING;
+        this.state = Game.State.GUESSING;
         this.mismatchTimeout = 0;
         this.moves = 0;
     }
 
     onBoardClick(event) {
-        if (this.state !== GAME_STATE_MISMATCH) {
+        if (this.state !== Game.State.MISMATCH) {
             return;
         }
         event.stopPropagation();
@@ -108,10 +103,10 @@ class Game {
     }
 
     onCardClick(card, event) {
-        if (this.state !== GAME_STATE_GUESSING) {
+        if (this.state !== Game.State.GUESSING) {
             return;
         }
-        if (!card.open()) {
+        if (!card.tryOpen()) {
             return;
         }
         event.stopPropagation();
@@ -127,16 +122,16 @@ class Game {
     guessing() {
         this.openedCards.forEach((card) => card.close());
         this.openedCards.splice(0, this.openedCards.length);
-        this.state = GAME_STATE_GUESSING;
+        this.state = Game.State.GUESSING;
         window.clearTimeout(this.mismatchTimeout);
         this.mismatchTimeout = 0;
     }
 
     mismatch() {
         this.openedCards.forEach((card) => card.mismatch());
-        this.state = GAME_STATE_MISMATCH;
+        this.state = Game.State.MISMATCH;
         this.incrementMoves();
-        this.mismatchTimeout = window.setTimeout(this.guessing.bind(this), GAME_SHOWING_TIMEOUT);
+        this.mismatchTimeout = window.setTimeout(this.guessing.bind(this), this.showTimeout);
     }
 
     matched() {
@@ -151,11 +146,22 @@ class Game {
     }
 
     over() {
-        this.state = GAME_STATE_OVER;
-        this.board.dispatchEvent(new CustomEvent(GAME_EVENT_OVER));
+        this.state = Game.State.OVER;
+        this.board.dispatchEvent(new CustomEvent(Game.Events.OVER));
     }
 
     incrementMoves() {
-        this.board.dispatchEvent(new CustomEvent(GAME_EVENT_MOVES, {detail: ++this.moves}));
+        this.board.dispatchEvent(new CustomEvent(Game.Events.MOVES, {detail: ++this.moves}));
     }
 }
+
+Game.Events = {
+    MOVES: 'GameMoves',
+    OVER: 'GameOver'
+};
+
+Game.State = {
+    GUESSING: Symbol(),
+    MISMATCH: Symbol(),
+    OVER: Symbol()
+};
