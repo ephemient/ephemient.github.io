@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>μtone test</title>
+        <style>
+            input:invalid {
+                outline: solid 2px red;
+            }
+        </style>
+    </head>
+    <body>
+        <details>
+            <summary>Instructions</summary>
+            <div>
+                Press <kbd>go</kbd> to start.  Four tones of duration <kbd>duration</kbd>s will sound, separated by <kbd>gap</kbd>s.  The first three will be at <kbd>root</kbd>Hz; the last will be <kbd>step</kbd> above or below.  Press <kbd>&uarr;</kbd><kbd>U</kbd> or <kbd>&darr;</kbd><kbd>D</kbd> to be scored.
+            </div>
+        </details>
+        <div>
+            <label for="correct">correct</label>
+            <input id="correct" type="number" value="0" disabled>
+        </div>
+        <div>
+            <label for="correct">total</label>
+            <input id="total" type="number" value="0" disabled>
+        </div>
+        <div>
+            <label for="avg">mean response time</label>
+            <input id="avg" type="text" disabled>
+        </div>
+        <div>
+            <label for="step">step</label>
+            <input id="step" type="text" pattern="[1-9][0-9]*/[1-9][0-9]*$" value="1/32">
+        </div>
+        <div>
+            <label for="root">root</label>
+            <input id="root" type="text" pattern="[1-9][0-9]*$" value="440">Hz
+        </div>
+        <div>
+            <label for="dur">duration</label>
+            <input id="dur" type="text" pattern="[1-9][0-9]*(/[1-9][0-9]*)?$" value="7/8">s
+        </div>
+        <div>
+            <label for="gap">gap</label>
+            <input id="gap" type="text" pattern="(0|[1-9][0-9]*)(/[1-9][0-9]*)?$" value="1/8">s
+        </div>
+        <div>
+            <button id="go" disabled>go</button>
+        </div>
+        <script>
+(function(correct, total, avg, step, root, dur, gap, go) {
+    let ctx, osc, gain, dir, start, stop, accum = 0, n = 0;
+    function reset() {
+        if (ctx) {
+            let t = ctx.currentTime;
+            osc.frequency.cancelScheduledValues(t);
+            gain.gain.cancelScheduledValues(t);
+            gain.gain.setValueAtTime(0, t);
+        }
+        go.disabled = '';
+        go.focus();
+        window.clearTimeout(stop);
+    }
+    window.addEventListener('keydown', function(e) {
+        let guess = false;
+        switch (e.key) {
+            case 'ArrowUp': case 'U': case 'u':
+                guess = true;
+            case 'ArrowDown': case 'D': case 'd':
+                break;
+            default:
+                return;
+        }
+        const delta = ctx.currentTime - start;
+        if (delta < 0) return;
+        reset();
+        if (guess === dir) {
+            correct.value = +correct.value + 1;
+        }
+        total.value = +total.value + 1;
+        avg.value = (accum += delta) / ++n;
+    });
+    document.querySelectorAll('input[pattern]').forEach(function(e) {
+        e.addEventListener('blur', function() {
+            if (!e.value || !e.checkValidity()) e.value = e.defaultValue;
+        });
+    });
+    go.addEventListener('click', function() {
+        if (!ctx) {
+            ctx = new AudioContext();
+            osc = ctx.createOscillator();
+            gain = ctx.createGain();
+            osc.connect(gain).connect(ctx.destination);
+            osc.start();
+        }
+        const t = ctx.currentTime,
+            hz = +root.value, m = eval(`2**((${step.value})/6)`),
+            t0 = eval(dur.value), t1 = eval(gap.value);
+        go.disabled = 'disabled';
+        dir = Math.random() < 0.5, start = t + 3 * (t0 + t1);
+        osc.frequency.setValueAtTime(hz, t);
+        osc.frequency.setValueAtTime(dir ? hz * m : hz / m, start);
+        gain.gain.setValueAtTime(1, t);
+        gain.gain.setValueAtTime(0, t + t0);
+        gain.gain.setValueAtTime(1, t + t0 + t1);
+        gain.gain.setValueAtTime(0, t + 2 * t0 + t1);
+        gain.gain.setValueAtTime(1, t + 2 * t0 + 2 * t1);
+        gain.gain.setValueAtTime(0, t + 3 * t0 + 2 * t1);
+        gain.gain.setValueAtTime(1, t + 3 * t0 + 3 * t1);
+        gain.gain.setValueAtTime(0, t + 4 * t0 + 3 * t1);
+    });
+    reset();
+})(
+    document.getElementById('correct'),
+    document.getElementById('total'),
+    document.getElementById('avg'),
+    document.getElementById('step'),
+    document.getElementById('root'),
+    document.getElementById('dur'),
+    document.getElementById('gap'),
+    document.getElementById('go')
+);
+        </script>
+    </body>
+</html>
