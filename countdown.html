@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Miku Expo 2024 Countdown</title>
+<title>Miku Expo 2026 Countdown</title>
 <style>
 html, body {
   height: 100%;
@@ -10,10 +10,10 @@ html, body {
 }
 
 body {
-  background-color: #040416;
-  background-image: url(https://mikuexpo.com/na2024/images/hero_miku.png), url(https://mikuexpo.com/na2024/images/hero_bg.jpg);
+  background-image: url(https://mikuexpo.com/na2026/images/hero_chara.webp), url(https://mikuexpo.com/na2026/images/hero_bg.webp);
   background-position: top, center;
-  background-size: cover, cover;
+  background-repeat: no-repeat, repeat;
+  background-size: contain, auto;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -26,39 +26,41 @@ body {
   line-height: 1.5;
   text-shadow: 0 0 0.125em #000;
 }
+
+#logo {
+  max-width: calc(min(90vw, 50vh));
+}
 </style>
 </head>
 <body>
 <span id='days'>0 days</span>
 <span id='hms'>00:00:00</span>
 <select id='event'>
-  <option value='April 4, 2024 20:00:00 GMT-07:00'>Vancouver, BC</option>
-  <option value='April 6, 2024 20:00:00 GMT-07:00'>Portland, OR</option>
-  <option value='April 8, 2024 20:00:00 GMT-07:00'>San Jose, CA</option>
-  <option value='April 9, 2024 20:00:00 GMT-07:00'>San Jose, CA</option>
-  <option value='April 14, 2024 20:00:00 GMT-07:00'>Phoenix, AZ</option>
-  <option value='April 15, 2024 20:00:00 GMT-07:00'>Phoenix, AZ</option>
-  <option value='April 17, 2024 20:00:00 GMT-07:00'>Los Angeles, CA</option>
-  <option value='April 21, 2024 20:00:00 GMT-06:00'>Denver, CO</option>
-  <option value='April 22, 2024 20:00:00 GMT-06:00'>Denver, CO</option>
-  <option value='April 24, 2024 20:00:00 GMT-05:00'>Dallas, TX</option>
-  <option value='April 25, 2024 20:00:00 GMT-05:00'>Dallas, TX</option>
-  <option value='April 27, 2024 20:00:00 GMT-05:00'>Austin, TX</option>
-  <option value='April 30, 2024 20:00:00 GMT-04:00'>Atlanta, GA</option>
-  <option value='May 2, 2024 20:00:00 GMT-04:00'>Orlando, FL</option>
-  <option value='May 5, 2024 20:00:00 GMT-04:00'>Washington D.C.</option>
-  <option value='May 7, 2024 20:00:00 GMT-04:00'>Newark, NJ</option>
-  <option value='May 9, 2024 20:00:00 GMT-04:00'>Boston, MA</option>
-  <option value='May 12, 2024 20:00:00 GMT-04:00'>Detroit, MI</option>
-  <option value='May 14, 2024 20:00:00 GMT-05:00'>Chicago, IL</option>
-  <option value='May 16, 2024 20:00:00 GMT-04:00'>Toronto, ON</option>
-  <option value='May 21, 2024 20:00:00 GMT-06:00'>Mexico City, DF</option>
+  <option value='April 13, 2026 20:00:00 GMT-05:00'>Chicago, IL</option>
+  <option value='April 15, 2026 20:00:00 GMT-05:00'>Denver, CO</option>
+  <option value='April 18, 2026 20:00:00 GMT-07:00'>Vancouver, BC</option>
+  <option value='April 20, 2026 20:00:00 GMT-07:00'>Seattle, WA</option>
+  <option value='April 22, 2026 20:00:00 GMT-07:00'>San Jose, CA</option>
+  <option value='April 25, 2026 20:00:00 GMT-07:00'>Los Angeles, CA</option>
+  <option value='April 28, 2026 20:00:00 GMT-07:00'>Glendale, AZ</option>
+  <option value='April 30, 2026 20:00:00 GMT-05:00'>Grand Prairie, TX</option>
+  <option value='May 1, 2026 20:00:00 GMT-05:00'>Cedar Park, TX</option>
+  <option value='May 3, 2026 19:00:00 GMT-04:00'>Duluth, GA</option>
+  <option value='May 5, 2026 20:00:00 GMT-04:00'>Washington, DC</option>
+  <option value='May 7, 2026 20:00:00 GMT-04:00'>Newark, NJ</option>
+  <option value='May 10, 2026 20:00:00 GMT-04:00'>Boston, MA</option>
+  <option value='May 13, 2026 20:00:00 GMT-04:00'>Hamilton, ON</option>
+  <option value='May 19, 2026 21:00:00 GMT-06:00'>Mexico City</option>
 </select>
+<img id='logo' src='https://mikuexpo.com/na2026/images/main_logo.webp'>
 <script>
 (function() {
   const daysElement = document.getElementById('days');
   const hmsElement = document.getElementById('hms');
   const eventElement = document.getElementById('event');
+  while (eventElement.selectedIndex < eventElement.length && Date.parse(eventElement.value) < Date.now()) {
+    eventElement.selectedIndex++;
+  }
   let timer = 0;
   const update = () => {
     const target = Date.parse(eventElement.value);
